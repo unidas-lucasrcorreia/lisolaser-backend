@@ -8,7 +8,7 @@ const string CorsPolicy = "AllowFrontend";
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy(CorsPolicy, p =>
-        p.WithOrigins("http://localhost:4200", "https://localhost:4200", "https://lisolaser-cjdtfvargxc4hwgk.brazilsouth-01.azurewebsites.net")
+        p.AllowAnyOrigin()  // <-- Changed from WithOrigins to allow all
          .AllowAnyHeader()
          .AllowAnyMethod());
 });
@@ -26,7 +26,7 @@ builder.Services.AddMemoryCache();
 var app = builder.Build();
 
 // ===== Pipeline =====
-app.UseCors(CorsPolicy);
+app.UseCors(CorsPolicy); // This applies the "AllowFrontend" policy globally
 app.UseMiddleware<ErrorHandlingMiddleware>();
 
 app.UseSwagger();
