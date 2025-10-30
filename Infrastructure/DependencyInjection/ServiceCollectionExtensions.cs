@@ -17,7 +17,7 @@ namespace LisoLaser.Backend.Infrastructure.DependencyInjection
 
             services.AddHttpClient<CmsService>(client =>
             {
-                client.Timeout = TimeSpan.FromSeconds(12);
+                client.Timeout = TimeSpan.FromSeconds(120);
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Add("Accept", "application/json");
             })
