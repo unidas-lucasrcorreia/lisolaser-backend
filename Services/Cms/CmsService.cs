@@ -38,6 +38,13 @@ public class CmsService
     {
         if (!string.IsNullOrEmpty(_accessToken)) return;
 
+        var cacheKey = $"squidex:accessToken";
+        if (_cache.TryGetValue(cacheKey, out string? cached) && cached is not null)
+        {
+            _accessToken = cached;
+            return;
+        }
+
         using var request = new HttpRequestMessage(HttpMethod.Post, $"{_options.BaseUrl}/identity-server/connect/token")
         {
             Content = new FormUrlEncodedContent(new Dictionary<string, string>
@@ -55,6 +62,8 @@ public class CmsService
         var json = await response.Content.ReadAsStringAsync(ct);
         var result = JsonSerializer.Deserialize<TokenResponse>(json);
         _accessToken = result?.AccessToken;
+
+        _cache.Set(cacheKey, _accessToken, CacheTtl);
     }
 
     public async Task<string?> GetContentAsync(string schema, CancellationToken ct = default)
